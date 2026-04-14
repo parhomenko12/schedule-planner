@@ -2,19 +2,38 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Результат загрузки</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function applyTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') document.body.classList.add('dark');
+            else document.body.classList.remove('dark');
+        }
+        function toggleTheme() {
+            if (document.body.classList.contains('dark')) {
+                document.body.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+        window.onload = applyTheme;
+    </script>
 </head>
 <body>
-    <div class="container">
-        <h1>Результаты обработки PDF</h1>
-        <ul>
-        {% for result in results %}
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+    <div class="container" style="max-width: 600px;">
+        <h1>📋 Результаты обработки PDF</h1>
+        <ul style="margin: 20px 0; padding-left: 20px;">
+            {% for result in results %}
             <li>{{ result }}</li>
-        {% endfor %}
+            {% endfor %}
         </ul>
-        <p><a href="/admin">Загрузить ещё</a></p>
-        <p><a href="/">На главную</a></p>
+        <p><a href="/admin">📤 Загрузить ещё</a></p>
+        <p><a href="/">🏠 На главную</a></p>
     </div>
 </body>
 </html>
