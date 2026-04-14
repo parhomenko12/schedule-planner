@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Расписание группы {{ group_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="manifest" href="/static/manifest.json">
+    <style>
+        .day-schedule {
+            margin-bottom: 30px;
+            border: 1px solid var(--table-border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .day-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid var(--table-border);
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background: var(--table-header-bg);
+        }
+        .week-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .week-nav a {
+            background: var(--primary-color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+        .week-nav a:hover {
+            background: var(--primary-hover);
+        }
+        .notification {
+            background-color: #ffc107;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        function applyTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') document.body.classList.add('dark');
+            else document.body.classList.remove('dark');
+        }
+        function toggleTheme() {
+            if (document.body.classList.contains('dark')) {
+                document.body.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+        window.onload = applyTheme;
+        
+        // Регистрация Service Worker для PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/static/sw.js')
+                .then(reg => console.log('SW registered', reg))
+                .catch(err => console.log('SW failed', err));
+        }
+    </script>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+    <div class="container">
+        {% if show_notification %}
+        <div class="notification">
+            🔔 {{ notification_message }}
+        </div>
+        {% endif %}
+        <h1>📚 Расписание группы {{ group_name }}</h1>
+        <div class="week-nav">
+            <a href="{{ url_for('week_schedule', group_id=group_id, week_offset=week_offset-1) }}">← Предыдущая неделя</a>
+            <div class="week-info">
+                Неделя: {% if even_week %}ЧЁТНАЯ{% else %}НЕЧЁТНАЯ{% endif %}
+            </div>
+            <a href="{{ url_for('week_schedule', group_id=group_id, week_offset=week_offset+1) }}">Следующая неделя →</a>
+        </div>
+        
+        {% for day in schedule_by_day %}
+        <div class="day-schedule">
+            <div class="day-header">{{ day.weekday }}, {{ day.date }}</div>
+            {% if day.pairs %}
+            <table>
+                <thead>
+                    <tr><th>Пара</th><th>Время</th><th>Предмет</th><th>Кабинет</th></tr>
+                </thead>
+                <tbody>
+                    {% for pair in day.pairs %}
+                    <tr>
+                        <td>{{ pair.pair_number }}</td>
+                        <td>{{ pair.start_time }} – {{ pair.end_time }}</td>
+                        <td>{{ pair.subject }}</td>
+                        <td>{{ pair.room }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p style="padding: 10px;">Нет пар</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+        
+        <p style="margin-top: 20px;"><a href="/change_group">Сменить группу</a></p>
+    </div>
+</body>
+</html>

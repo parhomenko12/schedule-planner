@@ -1,0 +1,136 @@
+/* Базовые переменные (светлая тема по умолчанию) */
+:root {
+    --bg-color: #f8f0ff;
+    --text-color: #2c1a4d;
+    --primary-color: #7b2cbf;
+    --primary-hover: #9b4dff;
+    --table-header-bg: #e0ccff;
+    --table-border: #cbb2fe;
+    --card-bg: white;
+    --shadow: rgba(0,0,0,0.1);
+}
+
+body.dark {
+    --bg-color: #1a0f2e;
+    --text-color: #e9d9ff;
+    --primary-color: #b87cff;
+    --primary-hover: #d4a5ff;
+    --table-header-bg: #2e1a4d;
+    --table-border: #5a3a8a;
+    --card-bg: #2a1a3e;
+    --shadow: rgba(0,0,0,0.3);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 5px 15px var(--shadow);
+}
+
+h1, h2, h3 {
+    color: var(--primary-color);
+}
+
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px var(--shadow);
+    transition: 0.2s;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.theme-toggle:hover {
+    background: var(--primary-hover);
+    transform: scale(1.05);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+th, td {
+    border: 1px solid var(--table-border);
+    padding: 12px;
+    text-align: left;
+}
+th {
+    background-color: var(--table-header-bg);
+    color: var(--text-color);
+}
+tr:nth-child(even) {
+    background-color: var(--card-bg);
+}
+
+button, input[type="submit"], .btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+button:hover, input[type="submit"]:hover, .btn:hover {
+    background-color: var(--primary-hover);
+}
+
+select, input[type="date"], input[type="text"], input[type="password"] {
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid var(--table-border);
+    background: var(--card-bg);
+    color: var(--text-color);
+    margin: 5px;
+}
+
+.week-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+}
+.week-nav button {
+    font-size: 18px;
+    padding: 8px 20px;
+}
+.week-info {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
