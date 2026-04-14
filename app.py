@@ -87,7 +87,6 @@ def week_schedule(group_id):
             'pairs': rows
         })
     
-    # Проверяем, есть ли обновление расписания за сегодня
     update = db.execute("SELECT last_update, message FROM updates WHERE id = 1").fetchone()
     show_notification = False
     notification_message = ''
@@ -164,7 +163,6 @@ def admin():
                     results.append(f"❌ {filename} – ошибка: {e}")
             else:
                 results.append(f"⚠️ {file.filename} – недопустимый формат (только PDF)")
-        # Обновляем запись о последнем обновлении
         db.execute("UPDATE updates SET last_update = ?, message = ? WHERE id = 1",
                    (datetime.now().strftime('%Y-%m-%d %H:%M'), "Новое расписание загружено!"))
         db.commit()
@@ -181,7 +179,8 @@ def manifest():
 def service_worker():
     return send_from_directory('static', 'sw.js', mimetype='application/javascript')
 
+# ------------------- Это важно для Railway! -------------------
+application = app
+
 if __name__ == '__main__':
     app.run(debug=True)
-
-application = app
