@@ -125,12 +125,92 @@ def login():
     return '''
         <!DOCTYPE html>
         <html>
-        <head><meta charset="UTF-8"><title>Вход для преподавателя</title></head>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Вход для преподавателя</title>
+            <link rel="stylesheet" href="/static/style.css">
+            <style>
+                .theme-toggle {
+                    position: fixed;
+                    top: 10px;
+                    right: 10px;
+                    background: #7b2cbf;
+                    color: white;
+                    border: none;
+                    border-radius: 50%;
+                    width: 44px;
+                    height: 44px;
+                    font-size: 22px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                .container {
+                    max-width: 500px;
+                    margin: 50px auto;
+                    text-align: center;
+                }
+                input[type="password"] {
+                    width: 100%;
+                    padding: 12px;
+                    margin: 10px 0;
+                    border-radius: 12px;
+                    border: 1px solid #cbb2fe;
+                    font-size: 1rem;
+                }
+                button {
+                    width: 100%;
+                    padding: 12px;
+                    background: #7b2cbf;
+                    color: white;
+                    border: none;
+                    border-radius: 12px;
+                    font-size: 1rem;
+                    cursor: pointer;
+                }
+                button:hover {
+                    background: #9b4dff;
+                }
+                body.dark .container {
+                    background: #2a1a3e;
+                    color: #e9d9ff;
+                }
+                body.dark input[type="password"] {
+                    background: #2a1a3e;
+                    color: #e9d9ff;
+                    border-color: #5a3a8a;
+                }
+            </style>
+            <script>
+                function applyTheme() {
+                    const savedTheme = localStorage.getItem('theme');
+                    if (savedTheme === 'dark') document.body.classList.add('dark');
+                    else document.body.classList.remove('dark');
+                }
+                function toggleTheme() {
+                    if (document.body.classList.contains('dark')) {
+                        document.body.classList.remove('dark');
+                        localStorage.setItem('theme', 'light');
+                    } else {
+                        document.body.classList.add('dark');
+                        localStorage.setItem('theme', 'dark');
+                    }
+                }
+                window.onload = applyTheme;
+            </script>
+        </head>
         <body>
-            <form method="post">
-                <input type="password" name="password" placeholder="Введите пароль" required>
-                <button type="submit">Войти</button>
-            </form>
+            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+            <div class="container">
+                <h1>🔐 Вход для преподавателя</h1>
+                <form method="post">
+                    <input type="password" name="password" placeholder="Введите пароль" required>
+                    <button type="submit">Войти</button>
+                </form>
+                <p style="margin-top: 20px;"><a href="/">На главную</a></p>
+            </div>
         </body>
         </html>
     '''
