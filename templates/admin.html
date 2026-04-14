@@ -2,19 +2,37 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Загрузка расписания</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function applyTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') document.body.classList.add('dark');
+            else document.body.classList.remove('dark');
+        }
+        function toggleTheme() {
+            if (document.body.classList.contains('dark')) {
+                document.body.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+        window.onload = applyTheme;
+    </script>
 </head>
 <body>
-    <div class="container">
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+    <div class="container" style="max-width: 600px;">
         <h1>📁 Загрузка PDF с расписанием</h1>
         <form method="post" enctype="multipart/form-data" action="/admin">
-            <label for="pdf_files">Выберите один или несколько PDF-файлов:</label>
             <input type="file" name="pdf_files" id="pdf_files" accept=".pdf" multiple required>
             <button type="submit">Загрузить</button>
         </form>
-        <p><a href="/logout">Выйти из админки</a></p>
-        <p><a href="/">На главную</a></p>
+        <p><a href="/logout">🚪 Выйти из админки</a></p>
+        <p><a href="/">🏠 На главную</a></p>
     </div>
 </body>
 </html>
