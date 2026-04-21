@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function applyTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') document.body.classList.add('dark');
+            else document.body.classList.remove('dark');
+        }
+        function toggleTheme() {
+            if (document.body.classList.contains('dark')) {
+                document.body.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+        window.onload = applyTheme;
+    </script>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+    <div class="container" style="max-width: 500px;">
+        <h1>🔐 Вход</h1>
+        <form method="post" action="/login">
+            <input type="text" name="login" placeholder="Email или телефон" required>
+            <input type="password" name="password" placeholder="Пароль" required>
+            <button type="submit">Войти</button>
+        </form>
+        <p style="text-align: center; margin-top: 20px;">Нет аккаунта? <a href="/register">Зарегистрироваться</a></p>
+        <p style="text-align: center;"><a href="/">На главную</a></p>
+    </div>
+</body>
+</html>
