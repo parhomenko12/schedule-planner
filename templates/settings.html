@@ -26,25 +26,6 @@
         .settings-item:last-child {
             border-bottom: none;
         }
-        .settings-item a {
-            color: var(--text-color);
-            text-decoration: none;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .settings-item a:hover {
-            color: var(--primary-color);
-        }
-        .arrow {
-            font-size: 1.2rem;
-        }
-        .contact-info {
-            background: rgba(123, 44, 191, 0.1);
-            padding: 12px;
-            border-radius: 12px;
-            margin-top: 10px;
-        }
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -55,17 +36,14 @@
             justify-content: space-around;
             padding: 10px 0;
             border-top: 1px solid var(--table-border);
-            box-shadow: 0 -2px 10px var(--shadow);
             z-index: 100;
         }
         .bottom-nav a {
             flex: 1;
             text-align: center;
-            padding: 8px 0;
             text-decoration: none;
             color: var(--text-color);
             font-size: 0.8rem;
-            transition: 0.2s;
         }
         .bottom-nav a.active {
             color: var(--primary-color);
@@ -76,8 +54,12 @@
         }
         .policy-text {
             font-size: 0.85rem;
-            color: var(--text-color);
             opacity: 0.8;
+        }
+        .contact-info {
+            background: rgba(123, 44, 191, 0.1);
+            padding: 12px;
+            border-radius: 12px;
             margin-top: 10px;
         }
     </style>
@@ -100,8 +82,6 @@
     </script>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
-    
     <div class="container content">
         <h1>⚙️ Настройки</h1>
         
