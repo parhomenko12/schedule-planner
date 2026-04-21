@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 from database import get_db, init_db
 from pdf_parser import parse_schedule
 from datetime import datetime, timedelta
-
+from werkzeug.security import generate_password_hash, check_password_hash
 # Принудительное добавление расписания звонков при запуске
 def force_init_calls():
     try:
@@ -79,19 +79,12 @@ def allowed_file(filename):
 # ------------------- Студенческая часть -------------------
 @app.route('/')
 def index():
-    group_id = request.cookies.get('selected_group')
-    if group_id:
-        db = get_db()
-        group = db.execute("SELECT id FROM groups WHERE id = ?", (group_id,)).fetchone()
-        if group:
-            return redirect(url_for('week_schedule', group_id=group_id))
-        else:
-            resp = make_response(redirect(url_for('index')))
-            resp.delete_cookie('selected_group')
-            return resp
-    db = get_db()
-    groups = db.execute("SELECT * FROM groups").fetchall()
-    return render_template('select_group.html', groups=groups)
+    # Если пользователь не авторизован — показываем страницу входа/регистрации
+    if not session.get('user_id'):
+        return render_template('welcome.html')
+    
+    # Если авторизован — показываем главную страницу
+    return render_template('home.html', user_name=session.get('user_name'))
 
 @app.route('/select_group', methods=['POST'])
 def select_group():
@@ -317,7 +310,67 @@ def manifest():
 def service_worker():
     return send_from_directory('static', 'sw.js', mimetype='application/javascript')
 
-# ------------------- Это важно для Railway! -------------------
+# ------------------- Регистрация и вход -------------------
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    db = get_db()
+    groups = db.execute("SELECT * FROM groups").fetchall()
+    
+    if request.method == 'POST':
+        last_name = request.form['last_name']
+        first_name = request.form['first_name']
+        middle_name = request.form.get('middle_name', '')
+        group_id = request.form['group_id']
+        phone = request.form['phone']
+        email = request.form['email']
+        password = request.form['password']
+        confirm = request.form['confirm_password']
+        
+        if password != confirm:
+            return "Пароли не совпадают"
+        
+        hashed = generate_password_hash(password)
+        
+        try:
+            db.execute('''
+                INSERT INTO users (last_name, first_name, middle_name, group_id, phone, email, password, role, status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, 'student', 'active')
+            ''', (last_name, first_name, middle_name, group_id, phone, email, hashed))
+            db.commit()
+            return redirect('/login')
+        except Exception as e:
+            return f"Ошибка: {e}. Возможно, такой email или телефон уже зарегистрирован."
+    
+    return render_template('register.html', groups=groups)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login_user():
+    if request.method == 'POST':
+        login_input = request.form['login']
+        password = request.form['password']
+        
+        db = get_db()
+        user = db.execute('''
+            SELECT * FROM users WHERE email = ? OR phone = ?
+        ''', (login_input, login_input)).fetchone()
+        
+        if user and check_password_hash(user['password'], password):
+            session['user_id'] = user['id']
+            session['user_name'] = f"{user['first_name']} {user['last_name']}"
+            session['user_role'] = user['role']
+            return redirect('/')
+        else:
+            return "Неверный логин или пароль. <a href='/login'>Попробовать снова</a>"
+    
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout_user():
+    session.pop('user_id', None)
+    session.pop('user_name', None)
+    session.pop('user_role', None)
+    return redirect('/')
+    
 application = app
 
 if __name__ == '__main__':
