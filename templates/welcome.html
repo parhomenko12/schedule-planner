@@ -5,6 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Планировщик расписания</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .btn {
+            display: block;
+            background: var(--primary-color);
+            color: white;
+            padding: 14px;
+            border-radius: 12px;
+            text-decoration: none;
+            text-align: center;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: scale(1.02);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        .info-text {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+    </style>
     <script>
         function applyTheme() {
             const savedTheme = localStorage.getItem('theme');
@@ -27,10 +66,15 @@
     <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
     <div class="container" style="max-width: 500px; text-align: center;">
         <h1>📚 Планировщик учебного расписания</h1>
-        <p>Добро пожаловать!</p>
-        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 30px;">
-            <a href="/login" class="btn" style="background: var(--primary-color); color: white; padding: 12px; border-radius: 12px; text-decoration: none;">Войти</a>
-            <a href="/register" class="btn" style="background: var(--primary-hover); color: white; padding: 12px; border-radius: 12px; text-decoration: none;">Зарегистрироваться</a>
+        <p>Добро пожаловать! Войдите или зарегистрируйтесь, чтобы видеть актуальное расписание своей группы.</p>
+        
+        <div class="btn-group">
+            <a href="/login" class="btn">🔐 Войти</a>
+            <a href="/register" class="btn btn-outline">📝 Зарегистрироваться</a>
+        </div>
+        
+        <div class="info-text">
+            <p>👨‍🏫 Преподавателям: <a href="/admin_login">вход в админ-панель</a></p>
         </div>
     </div>
 </body>
