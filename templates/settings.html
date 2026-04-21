@@ -5,6 +5,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Настройки</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .settings-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid var(--table-border);
+        }
+        .settings-section h3 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 12px;
+        }
+        .settings-item {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--table-border);
+        }
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+        .settings-item a {
+            color: var(--text-color);
+            text-decoration: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .settings-item a:hover {
+            color: var(--primary-color);
+        }
+        .arrow {
+            font-size: 1.2rem;
+        }
+        .contact-info {
+            background: rgba(123, 44, 191, 0.1);
+            padding: 12px;
+            border-radius: 12px;
+            margin-top: 10px;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid var(--table-border);
+            box-shadow: 0 -2px 10px var(--shadow);
+            z-index: 100;
+        }
+        .bottom-nav a {
+            flex: 1;
+            text-align: center;
+            padding: 8px 0;
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 0.8rem;
+            transition: 0.2s;
+        }
+        .bottom-nav a.active {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        .content {
+            padding-bottom: 80px;
+        }
+        .policy-text {
+            font-size: 0.85rem;
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-top: 10px;
+        }
+    </style>
     <script>
         function applyTheme() {
             const savedTheme = localStorage.getItem('theme');
@@ -25,13 +101,64 @@
 </head>
 <body>
     <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
-    <div class="container" style="max-width: 600px;">
+    
+    <div class="container content">
         <h1>⚙️ Настройки</h1>
-        <p><strong>Внешний вид</strong></p>
-        <button onclick="toggleTheme()" style="margin-bottom: 20px;">Переключить тему</button>
-        <p><strong>О приложении</strong><br>Версия 1.0. Планировщик учебного расписания для НППК.</p>
-        <p><strong>Помощь</strong><br>При возникновении проблем обращайтесь к администратору.</p>
-        <p><a href="/">На главную</a></p>
+        
+        <!-- Внешний вид -->
+        <div class="settings-section">
+            <h3>🎨 Внешний вид</h3>
+            <div class="settings-item">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>🌓 Тёмная / Светлая тема</span>
+                    <button onclick="toggleTheme()" style="padding: 8px 16px;">Переключить</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- О приложении -->
+        <div class="settings-section">
+            <h3>ℹ️ О приложении</h3>
+            <div class="settings-item">
+                <p><strong>Название:</strong> Планировщик учебного расписания</p>
+                <p><strong>Версия:</strong> 2.0</p>
+                <p><strong>Разработчик:</strong> Леванова Диана Денисовна, НППК</p>
+                <p><strong>Назначение:</strong> Автоматизация получения и отображения учебного расписания для студентов и преподавателей.</p>
+                <div class="policy-text">
+                    <strong>📋 Политика конфиденциальности</strong>
+                    <p>Приложение собирает и хранит только те данные, которые необходимы для функционирования: ФИО, контактные данные (email, телефон), учебную группу. Данные не передаются третьим лицам и используются исключительно для авторизации и отображения расписания.</p>
+                    <strong>🔒 Защита данных</strong>
+                    <p>Пароли хранятся в зашифрованном виде (хеширование). Доступ к админ-панели защищён отдельным паролем. Регулярно выполняются резервные копии базы данных.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Помощь -->
+        <div class="settings-section">
+            <h3>🆘 Помощь</h3>
+            <div class="settings-item">
+                <p><strong>Как пользоваться:</strong></p>
+                <ul>
+                    <li>Зарегистрируйтесь, указав свои данные и группу</li>
+                    <li>После входа вы увидите расписание своей группы на текущую неделю</li>
+                    <li>Используйте стрелки для переключения недель</li>
+                    <li>При обновлении расписания появится уведомление</li>
+                </ul>
+                <div class="contact-info">
+                    <strong>📧 Контакты администратора:</strong><br>
+                    Email: diana.levanova@nppk.ru<br>
+                    Telegram: @diana_levanova<br>
+                    Телефон: +7 (XXX) XXX-XX-XX (по вопросам работы приложения)
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Нижнее меню -->
+    <div class="bottom-nav">
+        <a href="/">🏠 Главная</a>
+        <a href="/schedule">📅 Расписание</a>
+        <a href="/settings" class="active">⚙️ Настройки</a>
     </div>
 </body>
 </html>
