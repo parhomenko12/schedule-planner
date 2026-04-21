@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function applyTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') document.body.classList.add('dark');
+            else document.body.classList.remove('dark');
+        }
+        function toggleTheme() {
+            if (document.body.classList.contains('dark')) {
+                document.body.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+        window.onload = applyTheme;
+    </script>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+    <div class="container">
+        <h1>👋 Привет, {{ user_name }}!</h1>
+        <p>Скоро здесь будет главная страница с новостями и мероприятиями колледжа.</p>
+        <p><a href="/schedule_view">Расписание</a></p>
+        <p><a href="/settings">Настройки</a></p>
+        <p><a href="/logout">Выйти</a></p>
+    </div>
+</body>
+</html>
