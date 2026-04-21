@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function applyTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') document.body.classList.add('dark');
+            else document.body.classList.remove('dark');
+        }
+        function toggleTheme() {
+            if (document.body.classList.contains('dark')) {
+                document.body.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+        window.onload = applyTheme;
+    </script>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+    <div class="container" style="max-width: 500px;">
+        <h1>📝 Регистрация</h1>
+        <form method="post" action="/register">
+            <input type="text" name="last_name" placeholder="Фамилия" required>
+            <input type="text" name="first_name" placeholder="Имя" required>
+            <input type="text" name="middle_name" placeholder="Отчество">
+            
+            <label>Выберите группу:</label>
+            <select name="group_id" required>
+                <option value="">-- Выберите группу --</option>
+                {% for group in groups %}
+                <option value="{{ group.id }}">{{ group.name }}</option>
+                {% endfor %}
+            </select>
+            
+            <input type="tel" name="phone" placeholder="Телефон (например, +79001234567)" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Пароль" required>
+            <input type="password" name="confirm_password" placeholder="Подтвердите пароль" required>
+            
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+        <p style="text-align: center; margin-top: 20px;">Уже есть аккаунт? <a href="/login">Войти</a></p>
+        <p style="text-align: center;"><a href="/">На главную</a></p>
+    </div>
+</body>
+</html>
