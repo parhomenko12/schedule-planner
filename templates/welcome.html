@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Планировщик расписания</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function applyTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') document.body.classList.add('dark');
+            else document.body.classList.remove('dark');
+        }
+        function toggleTheme() {
+            if (document.body.classList.contains('dark')) {
+                document.body.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+        window.onload = applyTheme;
+    </script>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+    <div class="container" style="max-width: 500px; text-align: center;">
+        <h1>📚 Планировщик учебного расписания</h1>
+        <p>Добро пожаловать!</p>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 30px;">
+            <a href="/login" class="btn" style="background: var(--primary-color); color: white; padding: 12px; border-radius: 12px; text-decoration: none;">Войти</a>
+            <a href="/register" class="btn" style="background: var(--primary-hover); color: white; padding: 12px; border-radius: 12px; text-decoration: none;">Зарегистрироваться</a>
+        </div>
+    </div>
+</body>
+</html>
