@@ -10,12 +10,14 @@ def get_db():
 
 def init_db():
     with get_db() as conn:
+        # Таблица групп
         conn.execute('''
             CREATE TABLE IF NOT EXISTS groups (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT UNIQUE NOT NULL
             )
         ''')
+        # Таблица расписания
         conn.execute('''
             CREATE TABLE IF NOT EXISTS timetable (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -27,6 +29,7 @@ def init_db():
                 FOREIGN KEY (group_id) REFERENCES groups(id)
             )
         ''')
+        # Таблица расписания звонков
         conn.execute('''
             CREATE TABLE IF NOT EXISTS calls_schedule (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,6 +40,7 @@ def init_db():
                 note TEXT
             )
         ''')
+        # Таблица обновлений
         conn.execute('''
             CREATE TABLE IF NOT EXISTS updates (
                 id INTEGER PRIMARY KEY,
@@ -44,24 +48,38 @@ def init_db():
                 message TEXT
             )
         ''')
+        # НОВАЯ ТАБЛИЦА: пользователи
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                last_name TEXT NOT NULL,
+                first_name TEXT NOT NULL,
+                middle_name TEXT,
+                group_id INTEGER,
+                phone TEXT UNIQUE,
+                email TEXT UNIQUE,
+                password TEXT NOT NULL,
+                role TEXT DEFAULT 'student',
+                status TEXT DEFAULT 'active',
+                photo TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (group_id) REFERENCES groups(id)
+            )
+        ''')
+        
         conn.execute("INSERT OR IGNORE INTO updates (id, last_update, message) VALUES (1, '', '')")
         conn.execute("INSERT OR IGNORE INTO groups (name) VALUES ('101')")
         conn.execute("INSERT OR IGNORE INTO groups (name) VALUES ('441, 442')")
         conn.execute("INSERT OR IGNORE INTO groups (name) VALUES ('100/1')")
         conn.commit()
     
-    # Добавляем расписание звонков (если оно пустое)
     init_calls()
 
 def init_calls():
     with get_db() as conn:
-        # Проверяем, есть ли уже записи
         count = conn.execute("SELECT COUNT(*) FROM calls_schedule").fetchone()[0]
         if count > 0:
-            print("Расписание звонков уже есть")
             return
-        
-        print("Добавляем расписание звонков...")
         # Понедельник
         monday = [
             (0, '08:30', '09:15', 'Разговоры о важном'),
@@ -75,7 +93,6 @@ def init_calls():
         for pair, start, end, note in monday:
             conn.execute('INSERT INTO calls_schedule (day_of_week, pair_number, start_time, end_time, note) VALUES (?, ?, ?, ?, ?)',
                          ('monday', pair, start, end, note))
-        
         # Четверг
         thursday = [
             (0, '08:30', '10:00', 'Час куратора'),
@@ -88,7 +105,6 @@ def init_calls():
         for pair, start, end, note in thursday:
             conn.execute('INSERT INTO calls_schedule (day_of_week, pair_number, start_time, end_time, note) VALUES (?, ?, ?, ?, ?)',
                          ('thursday', pair, start, end, note))
-        
         # Вторник, среда, пятница, суббота
         common = [
             (1, '08:30', '10:00', '1 пара'),
@@ -103,7 +119,6 @@ def init_calls():
                 conn.execute('INSERT INTO calls_schedule (day_of_week, pair_number, start_time, end_time, note) VALUES (?, ?, ?, ?, ?)',
                              (day, pair, start, end, note))
         conn.commit()
-        print("Расписание звонков добавлено")
 
 if __name__ == '__main__':
     init_db()
