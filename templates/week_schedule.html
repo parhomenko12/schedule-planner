@@ -2,10 +2,9 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Расписание группы {{ group_name }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="manifest" href="/static/manifest.json">
     <style>
         .day-schedule {
             margin-bottom: 30px;
@@ -56,6 +55,32 @@
             text-align: center;
             font-weight: bold;
         }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid var(--table-border);
+            z-index: 100;
+        }
+        .bottom-nav a {
+            flex: 1;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 0.8rem;
+        }
+        .bottom-nav a.active {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        .content {
+            padding-bottom: 80px;
+        }
     </style>
     <script>
         function applyTheme() {
@@ -73,18 +98,11 @@
             }
         }
         window.onload = applyTheme;
-        
-        // Регистрация Service Worker для PWA
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/static/sw.js')
-                .then(reg => console.log('SW registered', reg))
-                .catch(err => console.log('SW failed', err));
-        }
     </script>
 </head>
 <body>
     <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
-    <div class="container">
+    <div class="container content">
         {% if show_notification %}
         <div class="notification">
             🔔 {{ notification_message }}
@@ -92,11 +110,11 @@
         {% endif %}
         <h1>📚 Расписание группы {{ group_name }}</h1>
         <div class="week-nav">
-            <a href="{{ url_for('week_schedule', group_id=group_id, week_offset=week_offset-1) }}">← Предыдущая неделя</a>
+            <a href="{{ url_for('schedule_view', week_offset=week_offset-1) }}">← Предыдущая неделя</a>
             <div class="week-info">
                 Неделя: {% if even_week %}ЧЁТНАЯ{% else %}НЕЧЁТНАЯ{% endif %}
             </div>
-            <a href="{{ url_for('week_schedule', group_id=group_id, week_offset=week_offset+1) }}">Следующая неделя →</a>
+            <a href="{{ url_for('schedule_view', week_offset=week_offset+1) }}">Следующая неделя →</a>
         </div>
         
         {% for day in schedule_by_day %}
@@ -123,8 +141,13 @@
             {% endif %}
         </div>
         {% endfor %}
-        
-        <p style="margin-top: 20px;"><a href="/change_group">Сменить группу</a></p>
+    </div>
+    
+    <!-- Нижнее меню -->
+    <div class="bottom-nav">
+        <a href="/">🏠 Главная</a>
+        <a href="/schedule" class="active">📅 Расписание</a>
+        <a href="/settings">⚙️ Настройки</a>
     </div>
 </body>
 </html>
