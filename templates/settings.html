@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройки</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function applyTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') document.body.classList.add('dark');
+            else document.body.classList.remove('dark');
+        }
+        function toggleTheme() {
+            if (document.body.classList.contains('dark')) {
+                document.body.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+        window.onload = applyTheme;
+    </script>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+    <div class="container" style="max-width: 600px;">
+        <h1>⚙️ Настройки</h1>
+        <p><strong>Внешний вид</strong></p>
+        <button onclick="toggleTheme()" style="margin-bottom: 20px;">Переключить тему</button>
+        <p><strong>О приложении</strong><br>Версия 1.0. Планировщик учебного расписания для НППК.</p>
+        <p><strong>Помощь</strong><br>При возникновении проблем обращайтесь к администратору.</p>
+        <p><a href="/">На главную</a></p>
+    </div>
+</body>
+</html>
