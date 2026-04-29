@@ -3,35 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Загрузка расписания</title>
+    <title>Админ-панель</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .admin-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .admin-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid var(--table-border);
+            transition: 0.2s;
+        }
+        .admin-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+        .admin-card h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 12px;
+        }
+        .btn {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            margin-top: 10px;
+            transition: 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: scale(1.02);
+        }
+        input[type="file"] {
+            margin: 15px 0;
+            padding: 10px;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid var(--table-border);
+            z-index: 100;
+        }
+        .bottom-nav a {
+            flex: 1;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 0.8rem;
+        }
+        .bottom-nav a.active {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        .content {
+            padding-bottom: 80px;
+        }
+    </style>
     <script>
         function applyTheme() {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') document.body.classList.add('dark');
             else document.body.classList.remove('dark');
         }
-        function toggleTheme() {
-            if (document.body.classList.contains('dark')) {
-                document.body.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-            } else {
-                document.body.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-            }
-        }
         window.onload = applyTheme;
     </script>
 </head>
 <body>
-    <div class="container" style="max-width: 600px;">
-        <h1>📁 Загрузка PDF с расписанием</h1>
-        <form method="post" enctype="multipart/form-data" action="/admin">
-            <input type="file" name="pdf_files" id="pdf_files" accept=".pdf" multiple required>
-            <button type="submit">Загрузить</button>
-        </form>
-        <p><a href="/logout">🚪 Выйти из админки</a></p>
-        <p><a href="/">🏠 На главную</a></p>
+    <div class="container content">
+        <h1>🔧 Админ-панель</h1>
+        <p>Добро пожаловать, {{ session.admin_name or 'Администратор' }}!</p>
+        
+        <div class="admin-container">
+            <!-- Карточка загрузки календарного графика -->
+            <div class="admin-card">
+                <h3>📅 Загрузка календарного учебного графика</h3>
+                <form method="post" enctype="multipart/form-data" action="/admin/upload-calendar">
+                    <input type="file" name="calendar_file" accept=".pdf" required>
+                    <button type="submit" class="btn">📤 Загрузить календарь</button>
+                </form>
+                <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.7;">
+                    Загрузите PDF с календарным учебным графиком. Будет доступен для скачивания на главной странице.
+                </p>
+            </div>
+            
+            <!-- Карточка загрузки расписания -->
+            <div class="admin-card">
+                <h3>📁 Загрузка расписания</h3>
+                <form method="post" enctype="multipart/form-data" action="/admin">
+                    <input type="file" name="pdf_files" accept=".pdf" multiple required>
+                    <button type="submit" class="btn">📤 Загрузить PDF</button>
+                </form>
+                <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.7;">
+                    Поддерживаются файлы .pdf. Можно выбрать несколько файлов одновременно.
+                </p>
+            </div>
+            
+            <!-- Карточка управления преподавателями -->
+            <div class="admin-card">
+                <h3>👨‍🏫 Управление преподавателями</h3>
+                <p>Добавляйте или удаляйте преподавателей, которые смогут загружать расписание.</p>
+                <a href="/admin/users" class="btn">👨‍🏫 Перейти к управлению</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Нижнее меню -->
+    <div class="bottom-nav">
+        <a href="/">🏠 Главная</a>
+        <a href="/schedule">📅 Расписание</a>
+        <a href="/settings">⚙️ Настройки</a>
+        <a href="/admin">🔧 Админ-панель</a>
     </div>
 </body>
 </html>
