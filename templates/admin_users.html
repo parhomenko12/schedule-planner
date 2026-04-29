@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление преподавателями</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid var(--table-border);
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background: var(--table-header-bg);
+        }
+        .btn-small {
+            padding: 4px 8px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>👨‍🏫 Управление преподавателями</h1>
+        
+        <h2>Добавить преподавателя</h2>
+        <form method="post" action="/admin/add-teacher">
+            <input type="text" name="last_name" placeholder="Фамилия" required>
+            <input type="text" name="first_name" placeholder="Имя" required>
+            <input type="text" name="middle_name" placeholder="Отчество">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="tel" name="phone" placeholder="Телефон" required>
+            <input type="password" name="password" placeholder="Пароль" required>
+            <button type="submit">➕ Добавить преподавателя</button>
+        </form>
+        
+        <h2>Список преподавателей</h2>
+        <table>
+            <thead>
+                <tr><th>ФИО</th><th>Email</th><th>Телефон</th><th>Действия</th></tr>
+            </thead>
+            <tbody>
+                {% for teacher in teachers %}
+                <tr>
+                    <td>{{ teacher.last_name }} {{ teacher.first_name }} {{ teacher.middle_name or '' }}</td>
+                    <td>{{ teacher.email }}</td>
+                    <td>{{ teacher.phone }}</td>
+                    <td><a href="/admin/delete-teacher/{{ teacher.id }}" onclick="return confirm('Удалить?')">🗑️ Удалить</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p><a href="/admin">← Назад в админку</a></p>
+    </div>
+</body>
+</html>
